@@ -23,6 +23,26 @@ class CoreTest < Minitest::Test
     assert_equal "", tag("enabled" => false)
   end
 
+  STUB = "<script>#{Tag::QUEUE_STUB}</script>".freeze
+
+  def test_off_with_the_queue_stub_prints_only_the_stub_with_the_nonce
+    assert_equal %(<script nonce="n1">#{Tag::QUEUE_STUB}</script>),
+                 tag({ "enabled" => false, "queue_stub" => true, "nonce" => "n1", "props" => { "plan" => "pro" } })
+  end
+
+  def test_off_without_the_queue_stub_prints_nothing
+    assert_equal "", tag({ "enabled" => false, "props" => { "plan" => "pro" } })
+  end
+
+  def test_no_site_id_with_the_queue_stub_prints_only_the_stub
+    assert_equal STUB, tag({ "site_id" => nil, "queue_stub" => true, "props" => { "plan" => "pro" } })
+  end
+
+  def test_off_by_a_tag_argument_with_the_queue_stub
+    assert_equal STUB, tag({ "queue_stub" => true }, { "enabled" => false, "props" => { "plan" => "pro" } })
+    assert_equal "", tag({ "queue_stub" => true }, { "enabled" => false, "queue_stub" => false })
+  end
+
   def test_production_only_by_default
     config = Configuration.new("site_id" => "pa_X")
 

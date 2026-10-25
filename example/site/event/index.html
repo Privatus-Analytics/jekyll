@@ -1,0 +1,8 @@
+---
+layout: default
+title: Event
+---
+<h1>Event</h1>
+<button type="button" {% privatus_event "Report exported" format="csv" source="toolbar" %}>Export report</button>
+<a href="#pricing" {% privatus_click "pricing.cta" %}>Pricing</a>
+<form action="/event" method="get" {% privatus_event "Signup form" %}><button type="submit">Sign up</button></form>

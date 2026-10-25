@@ -3,7 +3,7 @@
 require "cgi"
 
 module JekyllPrivatusAnalytics
-  # Builds the script tag. Returns an empty string when no tag should print.
+  # Builds the script tag. When the tag is off it prints only the queue stub (with queue_stub), or nothing.
   #
   # Before the tracker tag it can also print the queue stub (queue_stub) and the
   # page props script (props), each with the nonce when there is one.
@@ -27,8 +27,10 @@ module JekyllPrivatusAnalytics
       !site_id.nil? && enabled?
     end
 
+    # The tag is off (disabled, or no site id): only the queue stub when queue_stub is on, else "".
+    # Then privatus.track calls in your own JavaScript queue up and never fail. Props are not used.
     def to_s
-      return "" unless render?
+      return off_html unless render?
 
       props_json = PageProps.json(page_props)
       html = []
@@ -50,6 +52,10 @@ module JekyllPrivatusAnalytics
       [@configuration.props, @overrides["page_props"], @overrides["props"]].reduce({}) do |merged, layer|
         merged.merge(keyed(layer))
       end
+    end
+
+    def off_html
+      option("queue_stub") == true ? inline_script(QUEUE_STUB) : ""
     end
 
     private

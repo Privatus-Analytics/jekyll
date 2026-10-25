@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "jekyll", "~> 4.4"
+# The plugin from this repo's own source (copied to /pkg), not from RubyGems.
+gem "jekyll-privatus-analytics", path: "/pkg"

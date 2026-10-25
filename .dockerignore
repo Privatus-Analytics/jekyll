@@ -1,0 +1,9 @@
+.git
+.github
+*.gem
+Gemfile.lock
+.bundle
+.jekyll-cache
+_site
+coverage
+vendor

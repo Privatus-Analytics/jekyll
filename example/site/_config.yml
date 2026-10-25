@@ -1,0 +1,12 @@
+# The site id and script host come from PRIVATUS_SITE_ID and PRIVATUS_SCRIPT_HOST.
+title: Privatus conformance
+plugins:
+  - jekyll-privatus-analytics
+privatus_analytics:
+  enabled: true
+  queue_stub: true
+  props:
+    plan: pro
+    role: admin
+    beta: true
+    seats: 3

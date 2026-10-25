@@ -12,8 +12,11 @@ module JekyllPrivatusAnalytics
       configuration = Configuration.for_site(item.site)
       return unless configuration.auto_inject? && html?(item)
 
-      tag = Tag.new(configuration, "page_props" => item.data["privatus_props"]).to_s
-      item.output = inject(item.output, tag)
+      tag = Tag.new(configuration, "page_props" => item.data["privatus_props"])
+      # Like a server middleware, auto inject adds nothing when the tag is off (not even the queue stub).
+      return unless tag.render?
+
+      item.output = inject(item.output, tag.to_s)
     end
 
     def html?(item)

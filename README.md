@@ -97,7 +97,8 @@ JEKYLL_ENV=production bundle exec jekyll build
 The tag prints nothing when there is no site id, and nothing outside the
 production environment. Plain `jekyll serve` and `jekyll build` run in the
 `development` environment, so your own visits while you write are never
-counted.
+counted. (With `queue_stub: true` it still prints the small queue stub, see
+below.)
 
 ### Or let the plugin add it
 
@@ -332,9 +333,12 @@ privatus_analytics:
   queue_stub: true
 ```
 
-or for one layout: `{% privatus_analytics queue_stub=true %}`. Like the tag,
-the stub prints only where the tag is on, so in development use
-`window.privatus && privatus.track(...)`.
+or for one layout: `{% privatus_analytics queue_stub=true %}`. The stub prints
+even when the tag is off (in development, with `enabled: false` or with no
+site id). Then your `privatus.track` calls never fail: they wait in the list
+and are never sent. Automatic injection (`auto_inject: true`) adds nothing at
+all when the tag is off, so use the `{% privatus_analytics %}` tag if you want
+the stub in development.
 
 ### See the results
 
@@ -355,6 +359,15 @@ of your props and event props: no names, emails or user ids. See the [privacy
 documentation](https://privatusanalytics.com/docs/privacy) for what is
 collected.
 
+If you have a privacy policy, it should say which tools handle your visitors' data. You can paste this:
+
+> This website uses [Privatus Analytics](https://privatusanalytics.com/privacy-analytics) to count visits. It
+> does not use cookies and does not follow you from one website to another. Your IP address is used for a moment
+> to count visits and is never stored.
+
+Change it to fit your site. The [privacy policy generator](https://privatusanalytics.com/tools/privacy-policy-generator)
+makes a longer version with your site's name in it.
+
 ## Development
 
 The tests run in Docker so your local Ruby does not matter:
@@ -365,6 +378,11 @@ The tests run in Docker so your local Ruby does not matter:
 
 It runs the Minitest suite (with real builds of tiny Jekyll sites), RuboCop,
 and `gem build`.
+
+The `example/` folder holds a tiny site for the [conformance
+tests](https://github.com/Privatus-Analytics/conformance), which open it in a
+real browser with the real tracker. Run them from a copy of that repo with
+`./run.sh ../jekyll`.
 
 ## Contributing
 

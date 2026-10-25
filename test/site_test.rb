@@ -20,6 +20,19 @@ class SiteTest < Minitest::Test
     refute_includes build_site(settings: {})["index.html"], "/js/pa.js"
   end
 
+  def test_queue_stub_alone_in_development
+    html = build_site(settings: SITE.merge("queue_stub" => true), env: "development")["index.html"]
+
+    assert_includes head(html), "<script>#{JekyllPrivatusAnalytics::Tag::QUEUE_STUB}</script>"
+    refute_includes html, "/js/pa.js"
+  end
+
+  def test_auto_inject_adds_nothing_when_off_even_with_the_queue_stub
+    pages = build_site(settings: SITE.merge("auto_inject" => true, "queue_stub" => true), env: "development")
+
+    refute_includes pages["2026/10/01/hello.html"], "window.privatus"
+  end
+
   def test_enabled_true_forces_it_on_in_development
     pages = build_site(settings: SITE.merge("enabled" => true), env: "development")
 

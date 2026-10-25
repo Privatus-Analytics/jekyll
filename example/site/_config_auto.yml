@@ -1,0 +1,4 @@
+# Added on top of _config.yml for the /auto build.
+privatus_analytics:
+  enabled: true
+  auto_inject: true

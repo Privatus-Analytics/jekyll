@@ -1,0 +1,9 @@
+---
+layout: default
+title: Nasty
+nasty: "</script><script>window.__pwned=1</script>\u2028\u2029&<>\"'"
+privatus_props:
+  nasty: "</script><script>window.__pwned=1</script>\u2028\u2029&<>\"'"
+---
+<h1>Nasty</h1>
+<button type="button" {% privatus_event "Nasty value" nasty=page.nasty %}>Nasty</button>
