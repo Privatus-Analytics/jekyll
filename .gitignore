@@ -1,0 +1,9 @@
+*.gem
+Gemfile.lock
+.bundle/
+.jekyll-cache/
+_site/
+coverage/
+vendor/
+.DS_Store
+SUBMISSION.md
