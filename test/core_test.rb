@@ -7,6 +7,7 @@ class CoreTest < Minitest::Test
   PageProps = JekyllPrivatusAnalytics::PageProps
   Configuration = JekyllPrivatusAnalytics::Configuration
   Tag = JekyllPrivatusAnalytics::Tag
+  Injector = JekyllPrivatusAnalytics::Injector
 
   BASIC = '<script defer src="https://privatusstats.com/js/pa.js" data-site="pa_TEST123456"></script>'
 
@@ -126,5 +127,27 @@ class CoreTest < Minitest::Test
   def test_click_attributes
     assert_equal({ "data-privatus-click" => "pricing.cta" }, Attributes.click("pricing.cta"))
     ["", "has space", "x" * 101, "<b>", nil].each { |name| assert_empty Attributes.click(name) }
+  end
+
+  def test_inject_adds_the_stub_alone_once
+    stub = "<script>#{Tag::QUEUE_STUB}</script>"
+    page = "<html><head><title>x</title></head><body></body></html>"
+    out = Injector.inject(page, stub)
+
+    assert_equal "<html><head><title>x</title>#{stub}\n</head><body></body></html>", out
+    assert_equal out, Injector.inject(out, stub)
+  end
+
+  def test_inject_skips_the_stub_when_the_page_already_prints_one_with_a_nonce
+    page = %(<html><head></head><body><script nonce="n1">#{Tag::QUEUE_STUB}</script></body></html>)
+
+    assert_equal page, Injector.inject(page, "<script>#{Tag::QUEUE_STUB}</script>")
+  end
+
+  def test_inject_still_adds_the_stub_when_it_is_only_shown_as_text
+    stub = "<script>#{Tag::QUEUE_STUB}</script>"
+    page = "<html><head></head><body><pre>&lt;script&gt;#{Tag::QUEUE_STUB}&lt;/script&gt;</pre></body></html>"
+
+    assert_equal 1, Injector.inject(page, stub).scan(stub).size
   end
 end

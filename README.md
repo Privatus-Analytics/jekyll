@@ -97,7 +97,7 @@ JEKYLL_ENV=production bundle exec jekyll build
 The tag prints nothing when there is no site id, and nothing outside the
 production environment. Plain `jekyll serve` and `jekyll build` run in the
 `development` environment, so your own visits while you write are never
-counted. (With `queue_stub: true` it still prints the small queue stub, see
+counted. (With `queue_stub: true` it still adds the small queue stub, see
 below.)
 
 ### Or let the plugin add it
@@ -333,12 +333,14 @@ privatus_analytics:
   queue_stub: true
 ```
 
-or for one layout: `{% privatus_analytics queue_stub=true %}`. The stub prints
-even when the tag is off (in development, with `enabled: false` or with no
-site id). Then your `privatus.track` calls never fail: they wait in the list
-and are never sent. Automatic injection (`auto_inject: true`) adds nothing at
-all when the tag is off, so use the `{% privatus_analytics %}` tag if you want
-the stub in development.
+or for one layout: `{% privatus_analytics queue_stub=true %}`. The stub is
+added even when the tag is off (in development, with `enabled: false` or with
+no site id), so your `privatus.track` calls never fail in development: they
+wait in the list and are never sent. Then only the stub is added, with no
+tracker and no page props. This works with the `{% privatus_analytics %}` tag
+and with automatic injection (`auto_inject: true`). A page that uses both
+still gets the stub only once. With the queue stub off, nothing is added when
+the tag is off.
 
 ### See the results
 

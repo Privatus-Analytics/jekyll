@@ -27,10 +27,43 @@ class SiteTest < Minitest::Test
     refute_includes html, "/js/pa.js"
   end
 
-  def test_auto_inject_adds_nothing_when_off_even_with_the_queue_stub
-    pages = build_site(settings: SITE.merge("auto_inject" => true, "queue_stub" => true), env: "development")
+  STUB = "<script>#{JekyllPrivatusAnalytics::Tag::QUEUE_STUB}</script>".freeze
+  OFF_FILES = { "404.html" => "---\nlayout: plain\nprivatus_props:\n  kind: missing\n---\nNot found\n" }.freeze
+  OFF_SETTINGS = SITE.merge("auto_inject" => true, "props" => { "plan" => "pro" }).freeze
 
-    refute_includes pages["2026/10/01/hello.html"], "window.privatus"
+  def assert_stub_alone(html, path)
+    assert_equal 1, head(html).scan(STUB).size, path
+    assert_equal 1, html.scan("window.privatus=window.privatus").size, path
+    refute_includes html, "/js/pa.js", path
+    refute_includes html, "privatusPageProps", path
+    refute_includes html, "data-props", path
+  end
+
+  def test_auto_inject_adds_only_the_stub_to_every_page_when_off
+    pages = build_site(settings: OFF_SETTINGS.merge("queue_stub" => true), files: OFF_FILES, env: "development")
+
+    %w[2026/10/01/hello.html 404.html].each { |path| assert_stub_alone(pages[path], path) }
+  end
+
+  def test_auto_inject_adds_the_stub_once_to_a_page_that_also_uses_the_liquid_tag
+    pages = build_site(settings: OFF_SETTINGS.merge("queue_stub" => true), env: "development")
+
+    assert_stub_alone(pages["index.html"], "index.html")
+  end
+
+  def test_auto_inject_adds_only_the_stub_without_a_site_id
+    pages = build_site(settings: { "auto_inject" => true, "queue_stub" => true }, files: OFF_FILES)
+
+    %w[index.html 2026/10/01/hello.html 404.html].each { |path| assert_stub_alone(pages[path], path) }
+  end
+
+  def test_auto_inject_adds_nothing_when_off_without_the_queue_stub
+    pages = build_site(settings: OFF_SETTINGS, files: OFF_FILES, env: "development")
+
+    %w[index.html 2026/10/01/hello.html 404.html].each do |path|
+      refute_includes pages[path], "window.privatus", path
+      refute_includes pages[path], "/js/pa.js", path
+    end
   end
 
   def test_enabled_true_forces_it_on_in_development
