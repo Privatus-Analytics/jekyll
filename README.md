@@ -1,18 +1,44 @@
 # Privatus Analytics for Jekyll
 
-A [Jekyll](https://jekyllrb.com) plugin that adds the cookieless
-[Privatus Analytics](https://privatusanalytics.com) tracking script to your
-site with a Liquid tag, or adds it to every page for you. It also has Liquid
-tags for custom events and click maps.
+**Simple, private website analytics for your Jekyll site. No cookies, honest numbers,
+and a dashboard you understand in seconds.**
 
-Privatus Analytics counts visits, sources, pages and conversions without
-cookies, local storage or fingerprinting, so analytics does not need a consent
-banner by itself. Check with your own counsel for your country.
+## Why Privatus Analytics
 
-The plugin only prints the browser script and HTML attributes. It never sends
-events from your computer or build server and sets no cookies. You need a
-Privatus Analytics account to see reports, and there is a free plan. Sign up at
-https://privatusanalytics.com.
+**Google Analytics is slow, confusing and hungry for data.** It sends what your
+visitors do to Google. In many countries it means showing a cookie pop-up (the box
+that asks visitors to accept cookies), and many people click "reject", so you never
+see them. Bots pad the numbers that are left.
+
+**Privatus Analytics fixes that.** It counts visits to your Jekyll site without cookies and
+never stores IP addresses. Bots are filtered out before they are counted. Your
+data is never sold or shared.
+
+What you get:
+
+- **A dashboard you understand in seconds.** Visitors, top pages and where people
+  came from, all on one screen.
+- **No cookie pop-up needed for our analytics.** We set no cookies and store no
+  personal data. Laws differ by country, so check your own legal advice.
+- **Honest numbers.** Known bots and fake traffic are left out on every plan.
+- **A fast site.** The tracking script is about 3 KB, tiny next to most tracking tags.
+- **Data you own.** We never sell it or show you ads, and you can pull it out
+  any time through the API.
+
+**Start free.** The Free plan has 10,000 events a month and 3 sites, with no card.
+Every new account also gets 14 days of Pro free, with no card.
+[Create your account](https://privatusanalytics.com).
+
+## What this package does
+
+- A [Jekyll](https://jekyllrb.com) plugin that adds the tracking script with a
+  Liquid tag, or adds it to every page for you.
+- Liquid tags for custom events and click maps.
+- The plugin only prints the browser script and HTML attributes. It never sends
+  events from your computer or build server and sets no cookies.
+
+You need a Privatus Analytics account to see your reports, and there is a
+free plan. [Sign up at privatusanalytics.com](https://privatusanalytics.com).
 
 ## Requirements
 
@@ -35,7 +61,7 @@ plugin in your `Gemfile` runs. The starter workflow already sets
 `JEKYLL_ENV=production`, which this plugin needs (see below).
 
 If you must stay on the classic build, paste the plain script tag from your
-Privatus site settings into your layout's `<head>` instead.
+Privatus Analytics site settings into your layout's `<head>` instead.
 
 ## Install
 
@@ -192,7 +218,7 @@ copies on other hosts.
 
 ## Product analytics: see which features people use
 
-Privatus can show which buttons, links and forms people really use. You add a
+Privatus Analytics can show which buttons, links and forms people really use. You add a
 few attributes to your HTML. The tracker reads them in the browser and sends
 the events. Your build still sends nothing.
 
@@ -310,7 +336,7 @@ they are, and lists stay lists (up to 30 items). The props are escaped so they
 are safe inside a script.
 
 **Never put names, emails, user ids or anything that points to one person in
-props.** Privatus counts visitors without any id. Put groups (like the section
+props.** Privatus Analytics counts visitors without any id. Put groups (like the section
 or the plan), not people. The server also removes emails and long ids it
 finds.
 
